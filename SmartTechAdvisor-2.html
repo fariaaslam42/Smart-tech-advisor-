@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Smart Tech Advisor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0a0f1e;
+    --navy2: #0d1326;
+    --navy3: #111827;
+    --navy4: #1a2540;
+    --border: #1e2d5a;
+    --blue: #3861fb;
+    --blue2: #6c8cff;
+    --gold: #f0b429;
+    --gold2: #f9d97e;
+    --emerald: #34d399;
+    --rose: #fb7185;
+    --text: #f1f5f9;
+    --sub: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; }
+  .syne { font-family: 'Syne', sans-serif; }
+
+  /* HEADER */
+  .header { position: sticky; top: 0; z-index: 100; background: rgba(13,19,38,0.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(16px); }
+  .header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--blue), var(--blue2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: white; box-shadow: 0 0 20px rgba(56,97,251,0.4); position: relative; }
+  .logo-dot { position: absolute; top: -2px; right: -2px; width: 11px; height: 11px; background: #34d399; border-radius: 50%; border: 2px solid var(--navy2); }
+  .logo-text h1 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; line-height: 1; }
+  .logo-text p { font-size: 11px; color: var(--sub); }
+  .theme-btn { background: var(--navy4); border: 1px solid var(--border); color: #fbbf24; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .theme-btn:hover { border-color: #fbbf24; }
+
+  /* TABS */
+  .tabs { max-width: 1100px; margin: 0 auto; padding: 0 16px 12px; display: flex; gap: 4px; overflow-x: auto; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; background: transparent; color: #64748b; }
+  .tab:hover { background: var(--navy4); color: #e2e8f0; }
+  .tab.active { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; box-shadow: 0 4px 15px rgba(56,97,251,0.35); }
+
+  /* MAIN */
+  .main { max-width: 1100px; margin: 0 auto; padding: 28px 16px; }
+
+  /* HERO */
+  .hero { background: var(--navy2); border: 1px solid var(--border); border-radius: 24px; padding: 48px 24px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(56,97,251,0.12); border-radius: 50%; filter: blur(40px); }
+  .hero::after { content: ''; position: absolute; bottom: -40px; left: -40px; width: 200px; height: 200px; background: rgba(108,140,255,0.08); border-radius: 50%; filter: blur(50px); }
+  .hero-emoji { font-size: 56px; display: block; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+  .hero h2 { font-family: 'Syne', sans-serif; font-size: clamp(28px, 5vw, 44px); font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+  .gold-text { background: linear-gradient(135deg, var(--gold), var(--gold2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { color: var(--sub); font-size: 15px; max-width: 420px; margin: 0 auto 24px; }
+  .hero-btn { display: inline-block; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #1a1000; padding: 12px 32px; border-radius: 16px; font-weight: 900; font-size: 14px; cursor: pointer; border: none; box-shadow: 0 4px 20px rgba(240,180,41,0.3); transition: opacity 0.2s; }
+  .hero-btn:hover { opacity: 0.9; }
+
+  /* QUOTE BOX */
+  .quote-box { background: var(--navy2); border: 1px solid var(--border); border-radius: 20px; padding: 28px; text-align: center; margin-bottom: 28px; }
+  .quote-mark { font-size: 32px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .quote-text { font-size: 15px; font-weight: 600; font-style: italic; margin: 8px 0 6px; transition: opacity 0.5s; }
+  .quote-author { font-size: 12px; color: var(--sub); transition: opacity 0.5s; }
+  .quote-dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .q-dot { width: 6px; height: 6px; border-radius: 3px; background: var(--navy4); cursor: pointer; transition: all 0.3s; border: none; }
+  .q-dot.active { width: 18px; background: var(--gold); }
+
+  /* SECTION TITLE */
+  .sec-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .sec-sub { font-size: 13px; font-style: italic; color: var(--gold); margin-bottom: 16px; }
+
+  /* CATEGORY GRID */
+  .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 32px; }
+  @media(max-width: 600px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cat-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 16px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.25s; }
+  .cat-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,97,251,0.15); }
+  .cat-card span { font-size: 28px; }
+  .cat-card p { font-size: 11px; font-weight: 700; color: var(--sub); }
+
+  /* MODE CARDS */
+  .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  @media(max-width: 640px) { .mode-grid { grid-template-columns: 1fr; } }
+  .mode-card { border-radius: 20px; padding: 24px; text-align: left; cursor: pointer; border: none; transition: all 0.3s; }
+  .mode-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+  .mode-card .m-icon { font-size: 36px; display: block; margin-bottom: 10px; }
+  .mode-card h4 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 900; color: white; margin-bottom: 4px; }
+  .mode-card .m-quote { font-size: 12px; color: rgba(255,255,255,0.65); font-style: italic; margin-bottom: 10px; }
+  .mode-card ul { list-style: none; }
+  .mode-card ul li { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 3px; }
+
+  /* BUDGET CARD */
+  .budget-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 24px; padding: 28px; }
+  .budget-card h3 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .budget-card .b-sub { font-size: 13px; color: var(--sub); font-style: italic; margin-bottom: 18px; }
+  .budget-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .budget-row input { flex: 1; background: var(--navy2); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; border-radius: 12px; font-size: 14px; font-family: 'Outfit', sans-serif; outline: none; transition: border-color 0.2s; }
+  .budget-row input:focus { border-color: var(--blue); }
+  .budget-row input::placeholder { color: #475569; }
+  .btn-blue { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; font-family: 'Outfit', sans-serif; }
+  .btn-blue:hover { opacity: 0.9; }
+  .budget-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .b-chip { background: var(--navy4); border: 1px solid var(--border); color: #94a3b8; padding: 6px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .b-chip:hover { border-color: var(--blue); color: #93c5fd; }
+  .b-chip.selected { background: var(--blue); color: white; border-color: var(--blue); }
+
+  /* PRODUCT GRID */
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media(max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width: 560px) { .product-grid { grid-template-columns: 1fr; } }
+
+  /* PRODUCT CARD */
+  .p-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 20px; padding: 20px; cursor: pointer; transition: all 0.3s; }
+  .p-card:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(56,97,251,0.15); }
+  .p-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .p-emoji { font-size: 36px; }
+  .p-badges { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .badge-trend { background: linear-gradient(135deg, #f43f5e, #fb923c); color: white; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 700; }
+  .badge-cat { background: var(--navy4); color: #93c5fd; font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); font-weight: 600; }
+  .p-name { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
+  .p-specs { font-size: 11px; color: var(--sub); margin-bottom: 10px; line-height: 1.5; }
+  .p-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+  .p-tag { background: var(--navy4); border: 1px solid #1e3a7a; color: #93c5fd; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .star-bar { display: flex; align-items: center; gap: 2px; }
+  .star-seg { width: 5px; height: 16px; border-radius: 2px; transition: all 0.2s; }
+  .star-seg.on { background: linear-gradient(180deg, var(--gold2), var(--gold)); }
+  .star-seg.off { background: #1e293b; }
+  .star-num { font-size: 11px; font-weight: 800; color: var(--gold); margin-left: 6px; }
+  .p-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px dashed #1e2d5a; }
+  .p-price { font-weight: 800; font-size: 15px; color: #34d399; }
+  .btn-detail { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border: none; padding: 7px 14px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; font-family: 'Outfit', sans-serif; }
+  .btn-detail:hover { opacity: 0.88; }
+
+  /* SEARCH + FILTERS */
+  .search-input { width: 100%; background: var(--navy2); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; border-radius: 14px; font-size: 14px; font-family: 'Outfit', sans-serif; outline: none; margin-bottom: 14px; transition: border-color 0.2s; }
+  .search-input:focus { border-color: var(--blue); }
+  .search-input::placeholder { color: #475569; }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .f-btn { padding: 7px 14px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: transparent; color: #64748b; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+  .f-btn:hover { background: var(--navy4); color: #e2e8f0; }
+  .f-btn.active { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(56,97,251,0.3); }
+  .count-text { font-size: 12px; color: var(--sub); margin-bottom: 18px; }
+
+  /* DETAIL */
+  .back-btn { display: flex; align-items: center; gap: 6px; color: #93c5fd; background: none; border: none; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 20px; font-family: 'Outfit', sans-serif; }
+  .back-btn:hover { color: white; }
+  .detail-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 24px; padding: 32px; max-width: 680px; margin: 0 auto; }
+  .detail-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .detail-emoji { font-size: 64px; display: block; margin-bottom: 10px; }
+  .detail-name { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 900; }
+  .detail-specs { font-size: 13px; color: var(--sub); margin-top: 4px; }
+  .detail-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+  .stat-box { flex: 1; border-radius: 16px; padding: 14px; }
+  .stat-box.green { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); }
+  .stat-box.amber { background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.2); }
+  .stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .stat-box.green .stat-label { color: #34d399; }
+  .stat-box.amber .stat-label { color: var(--gold); }
+  .stat-val { font-size: 20px; font-weight: 900; }
+  .stat-box.green .stat-val { color: #34d399; }
+  .stat-box.amber .stat-val { color: var(--gold); }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .d-tag { background: var(--navy4); border: 1px solid #1e3a7a; color: #93c5fd; font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  @media(max-width: 500px) { .pros-cons { grid-template-columns: 1fr; } }
+  .pc-box { border-radius: 16px; padding: 18px; }
+  .pc-box.pros { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.18); }
+  .pc-box.cons { background: rgba(251,113,133,0.07); border: 1px solid rgba(251,113,133,0.18); }
+  .pc-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .pc-box.pros .pc-title { color: #34d399; }
+  .pc-box.cons .pc-title { color: #fb7185; }
+  .pc-item { font-size: 13px; margin-bottom: 6px; display: flex; gap: 6px; line-height: 1.4; }
+  .pc-box.pros .pc-item { color: #6ee7b7; }
+  .pc-box.cons .pc-item { color: #fda4af; }
+  .ask-btn { width: 100%; background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; font-family: 'Outfit', sans-serif; }
+  .ask-btn:hover { opacity: 0.9; }
+
+  /* CHAT */
+  .chat-wrap { background: var(--navy3); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; height: 60vh; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .msg-row { display: flex; }
+  .msg-row.user { justify-content: flex-end; }
+  .msg-row.ai { justify-content: flex-start; align-items: flex-start; gap: 8px; }
+  .ai-avatar { width: 28px; height: 28px; border-radius: 10px; background: linear-gradient(135deg, var(--blue), var(--blue2)); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: white; flex-shrink: 0; margin-top: 2px; }
+  .msg-bubble { max-width: 78%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+  .msg-bubble.user { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border-bottom-right-radius: 4px; }
+  .msg-bubble.ai { background: var(--navy4); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .typing span { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  .chat-bottom { border-top: 1px solid var(--border); padding: 14px; }
+  .suggestion-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .s-chip { background: var(--navy4); border: 1px solid #1e3a7a; color: #93c5fd; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-family: 'Outfit', sans-serif; }
+  .s-chip:hover { background: rgba(56,97,251,0.2); color: #c7d7ff; }
+  .chat-input-row { display: flex; gap: 8px; }
+  .chat-input { flex: 1; background: var(--navy2); border: 1px solid var(--border); color: var(--text); padding: 12px 16px; border-radius: 12px; font-size: 14px; font-family: 'Outfit', sans-serif; outline: none; transition: border-color 0.2s; }
+  .chat-input:focus { border-color: var(--blue); }
+  .chat-input::placeholder { color: #475569; }
+  .send-btn { background: linear-gradient(135deg, var(--blue), var(--blue2)); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: opacity 0.2s; }
+  .send-btn:hover { opacity: 0.9; }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 24px 16px; border-top: 1px solid var(--border); margin-top: 20px; }
+  .footer p { font-size: 12px; color: var(--sub); }
+  .footer .f-quote { color: var(--gold); font-style: italic; font-weight: 600; display: block; margin-bottom: 4px; }
+
+  /* EMPTY STATE */
+  .empty-state { background: var(--navy3); border: 1px solid var(--border); border-radius: 20px; padding: 48px 24px; text-align: center; }
+  .empty-state .e-emoji { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; color: var(--sub); font-style: italic; }
+
+  /* LIGHT MODE */
+  body.light { background: #f0f4ff; color: #1e293b; }
+  body.light .header { background: rgba(255,255,255,0.97); border-color: #dbeafe; }
+  body.light .logo-dot { border-color: white; }
+  body.light .theme-btn { background: #f1f5f9; border-color: #e2e8f0; color: #92400e; }
+  body.light .tab:hover { background: #eff6ff; color: #1d4ed8; }
+  body.light .hero, body.light .quote-box, body.light .budget-card { background: white; border-color: #dbeafe; }
+  body.light .cat-card, body.light .p-card, body.light .detail-card, body.light .chat-wrap, body.light .empty-state { background: white; border-color: #dbeafe; }
+  body.light .cat-card p, body.light .count-text, body.light .p-specs { color: #64748b; }
+  body.light .badge-cat, body.light .p-tag, body.light .d-tag { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+  body.light .p-footer { border-color: #dbeafe; }
+  body.light .star-seg.off { background: #e2e8f0; }
+  body.light .search-input, body.light .budget-row input, body.light .chat-input { background: #f8fafc; border-color: #dbeafe; color: #1e293b; }
+  body.light .search-input::placeholder, body.light .budget-row input::placeholder, body.light .chat-input::placeholder { color: #94a3b8; }
+  body.light .f-btn { color: #64748b; border-color: #e2e8f0; }
+  body.light .f-btn:hover { background: #eff6ff; color: #1d4ed8; }
+  body.light .b-chip { background: #f1f5f9; color: #64748b; border-color: #e2e8f0; }
+  body.light .msg-bubble.ai { background: #f1f5f9; border-color: #e2e8f0; color: #1e293b; }
+  body.light .ai-avatar { box-shadow: none; }
+  body.light .chat-bottom { border-color: #e2e8f0; }
+  body.light .s-chip { background: #eff6ff; color: #1d4ed8; }
+  body.light .footer { border-color: #dbeafe; }
+  body.light .footer p { color: #94a3b8; }
+  body.light .q-dot { background: #e2e8f0; }
+  body.light .pc-box.pros { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.2); }
+  body.light .pc-box.cons { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+  body.light .stat-box.green { background: rgba(16,185,129,0.06); }
+  body.light .stat-box.amber { background: rgba(217,119,6,0.06); }
+  body.light .mode-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+
+  /* ANIMATIONS */
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .page { animation: fadeIn 0.25s ease; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">S<div class="logo-dot"></div></div>
+      <div class="logo-text">
+        <h1>Smart Tech Advisor</h1>
+        <p>AI-Powered • Pakistan</p>
+      </div>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">☀️ Light</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p><span class="f-quote">"Technology is not just a tool — it's your future."</span> Smart Tech Advisor © 2025 • AI-Powered</p>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const products = [
+  { id:1, name:"HP Victus 16", cat:"Laptop", price:150000, dp:"1,50,000 PKR", use:["Gaming","Video Editing"], rating:9, trending:true, pros:["Powerful RTX 4060 GPU","Fast 144Hz display","Good cooling system","Affordable for gaming"], cons:["Battery drains fast","Heavier than average","Fan noise under load"], specs:"AMD Ryzen 7, RTX 4060, 16GB RAM, 512GB SSD", img:"🎮" },
+  { id:2, name:"iPhone 15 Pro Max", cat:"Smartphone", price:380000, dp:"3,80,000 PKR", use:["Photography","Business","Video Editing"], rating:10, trending:true, pros:["48MP ProRAW + 5x Tetraprism zoom","A17 Pro chip – fastest ever","Titanium build","4K 60fps ProRes video"], cons:["Very expensive","No charger in box","Large and heavy"], specs:"A17 Pro, 48MP Triple Camera, 5x Zoom, 256GB", img:"📱" },
+  { id:3, name:"Samsung Galaxy S24 Ultra", cat:"Smartphone", price:280000, dp:"2,80,000 PKR", use:["Photography","Business","Gaming"], rating:9, trending:true, pros:["200MP camera","Built-in S Pen","Snapdragon 8 Gen 3","Bright display"], cons:["Huge and heavy","Expensive","S Pen limited use"], specs:"Snapdragon 8 Gen 3, 200MP Camera, 12GB RAM", img:"📸" },
+  { id:4, name:"Apple MacBook Air M3", cat:"Laptop", price:290000, dp:"2,90,000 PKR", use:["Business","Study","Video Editing","Job"], rating:10, trending:true, pros:["M3 chip insanely fast","18hr battery life","Silent fanless design","Lightweight"], cons:["Expensive","Max 16GB RAM","No dedicated GPU"], specs:"Apple M3, 16GB RAM, 512GB SSD, 15-inch Retina", img:"💻" },
+  { id:5, name:"PlayStation 5", cat:"Gaming Console", price:130000, dp:"1,30,000 PKR", use:["Gaming"], rating:9, trending:true, pros:["4K gaming","Ray tracing","Ultra-fast SSD","Exclusive titles"], cons:["Large size","Expensive games","Limited storage"], specs:"AMD Zen 2, RDNA 2 GPU, 825GB SSD, 4K/120fps", img:"🕹️" },
+  { id:6, name:"Sony WH-1000XM5", cat:"Headphones", price:85000, dp:"85,000 PKR", use:["Study","Music","Business"], rating:9, trending:true, pros:["Best-in-class ANC","30hr battery","Premium sound","Foldable design"], cons:["Expensive","No IP rating","Ear cups not replaceable"], specs:"ANC, 30hr battery, Bluetooth 5.2", img:"🎧" },
+  { id:7, name:"Canon EOS R50", cat:"Camera", price:145000, dp:"1,45,000 PKR", use:["Photography","Video Editing"], rating:9, trending:true, pros:["Excellent autofocus","Compact mirrorless","4K video","Great for beginners"], cons:["Small battery","No IBIS","Limited lenses"], specs:"24.2MP APS-C, 4K Video, Dual Pixel AF", img:"📷" },
+  { id:8, name:"Xiaomi Redmi Note 13 Pro", cat:"Smartphone", price:45000, dp:"45,000 PKR", use:["Study","Photography","Job"], rating:8, trending:true, pros:["200MP camera","AMOLED display","67W fast charging","Budget-friendly"], cons:["MIUI ads","Average chipset","No 5G in some variants"], specs:"Dimensity 7200 Ultra, 200MP Camera, 5100mAh", img:"📱" },
+  { id:9, name:"Dell XPS 15", cat:"Laptop", price:280000, dp:"2,80,000 PKR", use:["Business","Video Editing","Photography"], rating:9, trending:false, pros:["Stunning OLED display","Premium build","Great for creatives","Thunderbolt 4"], cons:["Very expensive","Limited ports","Runs hot"], specs:"Intel i7-13700H, RTX 4060, 32GB RAM, 1TB SSD", img:"💼" },
+  { id:10, name:"Samsung Galaxy Tab S9", cat:"Tablet", price:120000, dp:"1,20,000 PKR", use:["Study","Business","Photography"], rating:9, trending:false, pros:["AMOLED display","S Pen included","Long battery","Great for notes"], cons:["Expensive accessories","Android limits","No headphone jack"], specs:"Snapdragon 8 Gen 2, 12GB RAM, 256GB", img:"📚" },
+  { id:11, name:"Acer Nitro 5", cat:"Laptop", price:95000, dp:"95,000 PKR", use:["Gaming","Study"], rating:8, trending:false, pros:["Budget gaming","RTX 3050 GPU","Good build","Upgradeable RAM"], cons:["Average display","Loud fans","Poor battery"], specs:"Intel i5-12500H, RTX 3050, 8GB RAM, 512GB SSD", img:"🎮" },
+  { id:12, name:"Lenovo IdeaPad Slim 5", cat:"Laptop", price:85000, dp:"85,000 PKR", use:["Study","Job"], rating:8, trending:false, pros:["Lightweight","Good battery","Affordable","Decent display"], cons:["Average GPU","Plastic build","No backlit keyboard base"], specs:"AMD Ryzen 5 7530U, 8GB RAM, 512GB SSD", img:"🎓" },
+  { id:13, name:"OnePlus 12", cat:"Smartphone", price:95000, dp:"95,000 PKR", use:["Gaming","Photography","Job"], rating:8, trending:false, pros:["100W fast charging","Smooth 120Hz display","Hasselblad tuning","Value for money"], cons:["OxygenOS bloat","Average ultra-wide","No wireless charging in all regions"], specs:"Snapdragon 8 Gen 3, 50MP Hasselblad, 5400mAh", img:"⚡" },
+  { id:14, name:"Instant Pot Duo 7-in-1", cat:"Kitchen", price:25000, dp:"25,000 PKR", use:["Kitchen"], rating:8, trending:true, pros:["Multi-function cooker","Saves time","Energy efficient","Easy to use"], cons:["Large size","Learning curve","Lid tricky"], specs:"7 cooking modes, 6 Quart, 1000W", img:"🍳" },
+  { id:15, name:"Dyson V15 Detect", cat:"Kitchen", price:95000, dp:"95,000 PKR", use:["Kitchen"], rating:9, trending:false, pros:["Powerful suction","Laser dust detection","Bagless design","Long battery"], cons:["Very expensive","Heavy handheld","Small dustbin"], specs:"230 AW suction, 60min battery, HEPA filter", img:"🏠" },
+];
+
+const categories = ["All","Gaming","Photography","Video Editing","Study","Business","Job","Kitchen","Music"];
+
+const quotes = [
+  { text:"Technology is best when it brings people together.", author:"Matt Mullenweg" },
+  { text:"Apna future khud banao — ek smart choice se.", author:"Smart Tech Advisor" },
+  { text:"The right tool in the right hands changes everything.", author:"Unknown" },
+  { text:"Invest in technology, invest in yourself.", author:"Smart Tech Advisor" },
+  { text:"Innovation distinguishes between a leader and a follower.", author:"Steve Jobs" },
+  { text:"Zindagi mein sahi gadget, sahi waqt pe — game changer hota hai.", author:"Smart Tech Advisor" },
+  { text:"Your next great decision starts with the right information.", author:"Smart Tech Advisor" },
+  { text:"Simplicity is the ultimate sophistication.", author:"Leonardo da Vinci" },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let activeTab = "home";
+let isDark = true;
+let quoteIdx = 0;
+let selectedCat = "All";
+let searchVal = "";
+let budgetVal = "";
+let budgetChip = "";
+let budgetResults = [];
+let budgetSearched = false;
+let selectedProduct = null;
+let chatMessages = [
+  { role:"ai", text:"👋 Assalam-o-Alaikum! Main aapka Smart Tech Advisor hoon.\n\nKoi bhi phone, laptop, camera ya kitchen item ke baare mein poochh sakte hain — budget bhi bata dein to aur bhi achi suggestion dunga! 😊" }
+];
+let chatLoading = false;
+let quoteInterval;
+
+// ── THEME ─────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle("light", !isDark);
+  document.querySelector(".theme-btn").textContent = isDark ? "☀️ Light" : "🌙 Dark";
+}
+
+// ── QUOTE ROTATOR ─────────────────────────────────────────────────────────
+function startQuotes() {
+  clearInterval(quoteInterval);
+  quoteInterval = setInterval(() => {
+    const box = document.querySelector(".quote-text");
+    const auth = document.querySelector(".quote-author");
+    if (!box || !auth) return;
+    box.style.opacity = "0"; auth.style.opacity = "0";
+    setTimeout(() => {
+      quoteIdx = (quoteIdx + 1) % quotes.length;
+      updateQuoteDisplay();
+      box.style.opacity = "1"; auth.style.opacity = "1";
+    }, 500);
+  }, 4000);
+}
+
+function updateQuoteDisplay() {
+  const q = quotes[quoteIdx];
+  const box = document.querySelector(".quote-text");
+  const auth = document.querySelector(".quote-author");
+  const dots = document.querySelectorAll(".q-dot");
+  if (box) box.textContent = q.text;
+  if (auth) auth.textContent = "— " + q.author;
+  dots.forEach((d, i) => { d.classList.toggle("active", i === quoteIdx); });
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+const tabDefs = [
+  { id:"home", label:"🏠 Home" },
+  { id:"products", label:"📦 Products" },
+  { id:"budget", label:"💰 Budget" },
+  { id:"trending", label:"🔥 Trending" },
+  { id:"chat", label:"🤖 AI Chat" },
+];
+
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = tabDefs.map(t =>
+    `<button class="tab${activeTab===t.id?" active":""}" onclick="goTab('${t.id}')">${t.label}</button>`
+  ).join("");
+}
+
+function goTab(id) {
+  activeTab = id;
+  renderTabs();
+  renderMain();
+}
+
+// ── STAR BAR ──────────────────────────────────────────────────────────────
+function starBar(r) {
+  return `<div class="star-bar">${[...Array(10)].map((_,i)=>`<div class="star-seg ${i<r?'on':'off'}"></div>`).join("")}<span class="star-num">${r}/10</span></div>`;
+}
+
+// ── PRODUCT CARD ──────────────────────────────────────────────────────────
+function productCard(p) {
+  return `
+  <div class="p-card" onclick="openDetail(${p.id})">
+    <div class="p-card-top">
+      <span class="p-emoji">${p.img}</span>
+      <div class="p-badges">
+        ${p.trending?'<span class="badge-trend">🔥 Trending</span>':""}
+        <span class="badge-cat">${p.cat}</span>
+      </div>
+    </div>
+    <div class="p-name">${p.name}</div>
+    <div class="p-specs">${p.specs}</div>
+    <div class="p-tags">${p.use.map(u=>`<span class="p-tag">${u}</span>`).join("")}</div>
+    ${starBar(p.rating)}
+    <div class="p-footer">
+      <span class="p-price">${p.dp}</span>
+      <button class="btn-detail" onclick="event.stopPropagation();openDetail(${p.id})">Details →</button>
+    </div>
+  </div>`;
+}
+
+function openDetail(id) {
+  selectedProduct = products.find(p => p.id === id);
+  activeTab = "detail";
+  renderTabs();
+  renderMain();
+}
+
+// ── AI CHAT ───────────────────────────────────────────────────────────────
+async function sendChat() {
+  const input = document.querySelector(".chat-input");
+  const text = input.value.trim();
+  if (!text || chatLoading) return;
+  input.value = "";
+  chatMessages.push({ role:"user", text });
+  chatLoading = true;
+  renderChatMessages();
+
+  try {
+    const apiMsgs = chatMessages.slice(0,-1).concat([{role:"user",text}]).map(m => ({
+      role: m.role === "ai" ? "assistant" : "user",
+      content: m.text
+    }));
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: "You are Smart Tech Advisor — a helpful Pakistani tech expert. You recommend products with model names, prices in PKR, pros and cons. You know about phones, laptops, cameras, gaming devices, kitchen appliances, and more. Keep answers concise, friendly, and in the same language the user uses (Urdu or English). Always mention specific models and PKR prices when recommending.",
+        messages: apiMsgs
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b => b.text||"").join("") || "Sorry, kuch masla aa gaya.";
+    chatMessages.push({ role:"ai", text: reply });
+  } catch {
+    chatMessages.push({ role:"ai", text:"❌ Connection error. Please try again." });
+  }
+  chatLoading = false;
+  renderChatMessages();
+}
+
+function renderChatMessages() {
+  const box = document.querySelector(".chat-messages");
+  if (!box) return;
+  box.innerHTML = chatMessages.map(m => `
+    <div class="msg-row ${m.role}">
+      ${m.role==="ai"?'<div class="ai-avatar">AI</div>':""}
+      <div class="msg-bubble ${m.role}">${m.text.replace(/</g,"&lt;")}</div>
+    </div>
+  `).join("") + (chatLoading ? `
+    <div class="msg-row ai">
+      <div class="ai-avatar">AI</div>
+      <div class="msg-bubble ai"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>` : "");
+  box.scrollTop = box.scrollHeight;
+}
+
+function useChip(text) {
+  const input = document.querySelector(".chat-input");
+  if (input) { input.value = text; input.focus(); }
+}
+
+// ── BUDGET ────────────────────────────────────────────────────────────────
+function runBudgetSearch() {
+  const raw = document.querySelector(".budget-row input")?.value || budgetVal;
+  const b = parseInt(raw.replace(/,/g,""));
+  if (!b) return;
+  budgetVal = raw;
+  budgetResults = products.filter(p => p.price <= b).sort((a,c) => c.rating - a.rating);
+  budgetSearched = true;
+  renderBudgetResults();
+}
+
+function selectChip(val) {
+  budgetChip = val;
+  budgetVal = val;
+  const input = document.querySelector(".budget-row input");
+  if (input) input.value = val;
+  document.querySelectorAll(".b-chip").forEach(c => c.classList.toggle("selected", c.dataset.val === val));
+}
+
+function renderBudgetResults() {
+  const area = document.getElementById("budget-results");
+  if (!area) return;
+  if (!budgetSearched) { area.innerHTML = ""; return; }
+  if (budgetResults.length === 0) {
+    area.innerHTML = `<div class="empty-state"><div class="e-emoji">😔</div><h3>Is budget mein koi product nahi mila</h3><p>"Thora aur barha lo — achi cheez milegi!"</p></div>`;
+    return;
+  }
+  area.innerHTML = `<h3 class="sec-title" style="margin-bottom:16px">✅ ${budgetResults.length} products found within budget</h3><div class="product-grid">${budgetResults.map(productCard).join("")}</div>`;
+}
+
+// ── PAGES ─────────────────────────────────────────────────────────────────
+function pageHome() {
+  return `<div class="page">
+    <!-- HERO -->
+    <div class="hero">
+      <span class="hero-emoji">🚀</span>
+      <h2 class="syne">Find Your Perfect<br><span class="gold-text">Tech Match</span></h2>
+      <p>AI se powered smart recommendations — apna budget ya zaroorat batao, best product haazir!</p>
+      <button class="hero-btn" onclick="goTab('chat')">🤖 AI Se Poochho</button>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-box">
+      <div class="quote-mark">"</div>
+      <div class="quote-text" style="transition:opacity 0.5s">${quotes[quoteIdx].text}</div>
+      <div class="quote-author" style="transition:opacity 0.5s">— ${quotes[quoteIdx].author}</div>
+      <div class="quote-dots">${quotes.map((_,i)=>`<button class="q-dot${i===quoteIdx?" active":""}" onclick="jumpQuote(${i})"></button>`).join("")}</div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="sec-title syne">Explore Categories</div>
+    <div style="margin-bottom:10px"></div>
+    <div class="cat-grid">
+      ${[
+        {icon:"🎮",label:"Gaming"},{icon:"📸",label:"Photography"},
+        {icon:"🎬",label:"Video Editing"},{icon:"📚",label:"Study"},
+        {icon:"💼",label:"Business"},{icon:"👔",label:"Job"},
+        {icon:"🍳",label:"Kitchen"},{icon:"🎵",label:"Music"},
+        {icon:"🤖",label:"AI Chat"},{icon:"🔥",label:"Trending"},
+      ].map(c=>`<div class="cat-card" onclick="catClick('${c.label}')"><span>${c.icon}</span><p>${c.label}</p></div>`).join("")}
+    </div>
+
+    <!-- MODES -->
+    <div class="sec-title syne">Choose Your Mode</div>
+    <div style="margin-bottom:12px"></div>
+    <div class="mode-grid">
+      <div class="mode-card" style="background:linear-gradient(135deg,#2563eb,#06b6d4)" onclick="modeClick('Study')">
+        <span class="m-icon">🎓</span><h4>Student Mode</h4>
+        <p class="m-quote">"Seekhne ki koi umar nahi"</p>
+        <ul><li>• Budget Laptops</li><li>• Study Tablets</li><li>• Headphones</li><li>• Budget Phones</li></ul>
+      </div>
+      <div class="mode-card" style="background:linear-gradient(135deg,#059669,#0d9488)" onclick="modeClick('Job')">
+        <span class="m-icon">👔</span><h4>Employee Mode</h4>
+        <p class="m-quote">"Mehnat aur smart tools — success ka formula"</p>
+        <ul><li>• Office Laptops</li><li>• Smart Watches</li><li>• Premium Phones</li><li>• Portable Chargers</li></ul>
+      </div>
+      <div class="mode-card" style="background:linear-gradient(135deg,#7c3aed,#a855f7)" onclick="modeClick('Business')">
+        <span class="m-icon">💼</span><h4>Businessman Mode</h4>
+        <p class="m-quote">"Premium tools, premium results"</p>
+        <ul><li>• Premium MacBooks</li><li>• Top Smartphones</li><li>• High-end Cameras</li><li>• Pro Accessories</li></ul>
+      </div>
+    </div>
+
+    <!-- QUICK BUDGET -->
+    <div class="budget-card">
+      <h3>💰 Quick Budget Search</h3>
+      <p class="b-sub">"Bhai budget bata, baaki main sambhal lunga" — Smart Tech Advisor</p>
+      <div class="budget-row">
+        <input type="number" placeholder="Budget in PKR, e.g. 100000" id="home-budget" />
+        <button class="btn-blue" onclick="homeBudgetSearch()">Search →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function pageTrending() {
+  const trending = products.filter(p => p.trending);
+  return `<div class="page">
+    <div class="sec-title syne">🔥 Trending Right Now</div>
+    <p class="sec-sub">"Jo sab khareed rahe hain — tu bhi dekh!"</p>
+    <p class="count-text" style="margin-bottom:18px">Pakistan mein aaj kal yeh products sab se zyada chal rahe hain</p>
+    <div class="product-grid">${trending.map(productCard).join("")}</div>
+  </div>`;
+}
+
+function pageProducts() {
+  const filtered = products.filter(p => {
+    const mc = selectedCat === "All" || p.use.includes(selectedCat);
+    const ms = !searchVal || p.name.toLowerCase().includes(searchVal.toLowerCase()) || p.cat.toLowerCase().includes(searchVal.toLowerCase()) || p.use.some(u=>u.toLowerCase().includes(searchVal.toLowerCase()));
+    return mc && ms;
+  });
+  return `<div class="page">
+    <div class="sec-title syne">📦 All Products</div>
+    <p class="sec-sub">"Har zaroorat ka ek jawaab"</p>
+    <input class="search-input" placeholder="🔍 Search products..." value="${searchVal}" oninput="onSearch(this.value)" />
+    <div class="filter-row">${categories.map(c=>`<button class="f-btn${selectedCat===c?" active":""}" onclick="onCat('${c}')">${c}</button>`).join("")}</div>
+    <p class="count-text">${filtered.length} products found</p>
+    <div class="product-grid">${filtered.length ? filtered.map(productCard).join("") : '<div class="empty-state"><div class="e-emoji">🔍</div><h3>Koi product nahi mila</h3><p>Search ya category change karein</p></div>'}</div>
+  </div>`;
+}
+
+function pageBudget() {
+  return `<div class="page">
+    <div class="sec-title syne">💰 Budget Planner</div>
+    <p class="sec-sub">"Sahi budget, sahi choice — yehi hai samajhdaari"</p>
+    <div class="budget-card" style="margin-top:16px;margin-bottom:24px">
+      <div class="budget-row">
+        <input type="number" placeholder="Budget in PKR (e.g. 80000)" value="${budgetVal}" oninput="budgetVal=this.value" onkeydown="if(event.key==='Enter')runBudgetSearch()" />
+        <button class="btn-blue" onclick="runBudgetSearch()">Find →</button>
+      </div>
+      <div class="budget-chips">
+        ${[["30000","30K"],["50000","50K"],["100000","1 Lac"],["150000","1.5 Lac"],["200000","2 Lac"],["300000","3 Lac"]].map(([v,l])=>`<button class="b-chip${budgetChip===v?" selected":""}" data-val="${v}" onclick="selectChip('${v}')">PKR ${l}</button>`).join("")}
+      </div>
+    </div>
+    <div id="budget-results"></div>
+  </div>`;
+}
+
+function pageDetail(p) {
+  return `<div class="page">
+    <button class="back-btn" onclick="goTab('products')">← Back to Products</button>
+    <div class="detail-card">
+      <div class="detail-top">
+        <div>
+          <span class="detail-emoji">${p.img}</span>
+          <div class="detail-name syne">${p.name}</div>
+          <div class="detail-specs">${p.specs}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+          ${p.trending?'<span class="badge-trend" style="font-size:12px;padding:5px 12px">🔥 Trending</span>':""}
+          <span class="badge-cat" style="font-size:12px;padding:5px 12px">${p.cat}</span>
+        </div>
+      </div>
+      <div class="detail-stats">
+        <div class="stat-box green"><div class="stat-label">Price</div><div class="stat-val">${p.dp}</div></div>
+        <div class="stat-box amber"><div class="stat-label">AI Rating</div><div class="stat-val">${p.rating}/10 ⭐</div></div>
+      </div>
+      <div class="detail-tags">${p.use.map(u=>`<span class="d-tag">${u}</span>`).join("")}</div>
+      <div class="pros-cons">
+        <div class="pc-box pros">
+          <div class="pc-title">✅ Pros</div>
+          ${p.pros.map(x=>`<div class="pc-item"><span>•</span>${x}</div>`).join("")}
+        </div>
+        <div class="pc-box cons">
+          <div class="pc-title">❌ Cons</div>
+          ${p.cons.map(x=>`<div class="pc-item"><span>•</span>${x}</div>`).join("")}
+        </div>
+      </div>
+      <button class="ask-btn" onclick="askAbout('${p.name}')">💬 Ask AI About This Product</button>
+    </div>
+  </div>`;
+}
+
+function pageChat() {
+  return `<div class="page">
+    <div class="sec-title syne">🤖 AI Tech Advisor</div>
+    <p class="sec-sub">"Poochho — main hoon na!"</p>
+    <p style="font-size:13px;color:var(--sub);margin-bottom:18px">Urdu ya English — dono mein baat karo. Budget batao, zaroorat batao!</p>
+    <div class="chat-wrap">
+      <div class="chat-messages" id="chat-msgs"></div>
+      <div class="chat-bottom">
+        <div class="suggestion-chips">
+          ${["Gaming laptop under 150k?","Best phone under 50k PKR?","Kitchen items suggest karein","Video editing ke liye kya lun?"].map(s=>`<button class="s-chip" onclick="useChip('${s}')">${s}</button>`).join("")}
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" placeholder="Kuch bhi poochh sakte hain..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendChat()" />
+          <button class="send-btn" id="send-btn" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function renderMain() {
+  const m = document.getElementById("main");
+  if (activeTab === "home")     { m.innerHTML = pageHome();     startQuotes(); }
+  else if (activeTab === "trending") { clearInterval(quoteInterval); m.innerHTML = pageTrending(); }
+  else if (activeTab === "products") { clearInterval(quoteInterval); m.innerHTML = pageProducts(); }
+  else if (activeTab === "budget")   { clearInterval(quoteInterval); m.innerHTML = pageBudget(); renderBudgetResults(); }
+  else if (activeTab === "detail" && selectedProduct) { clearInterval(quoteInterval); m.innerHTML = pageDetail(selectedProduct); }
+  else if (activeTab === "chat") { clearInterval(quoteInterval); m.innerHTML = pageChat(); renderChatMessages(); }
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function catClick(label) {
+  if (label === "AI Chat") { goTab("chat"); return; }
+  if (label === "Trending") { goTab("trending"); return; }
+  selectedCat = label; goTab("products");
+}
+function modeClick(cat) { selectedCat = cat; goTab("products"); }
+function onSearch(v) { searchVal = v; document.querySelector(".product-grid").innerHTML = (() => {
+  const f = products.filter(p => { const mc = selectedCat==="All"||p.use.includes(selectedCat); const ms = !v||p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase())||p.use.some(u=>u.toLowerCase().includes(v.toLowerCase())); return mc&&ms; });
+  return f.length ? f.map(productCard).join("") : '<div class="empty-state"><div class="e-emoji">🔍</div><h3>Koi product nahi mila</h3><p>Search ya category change karein</p></div>';
+})(); document.querySelector(".count-text").textContent = products.filter(p=>{ const mc=selectedCat==="All"||p.use.includes(selectedCat); const ms=!v||p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase())||p.use.some(u=>u.toLowerCase().includes(v.toLowerCase())); return mc&&ms; }).length + " products found"; }
+function onCat(c) { selectedCat = c; renderMain(); }
+function jumpQuote(i) { quoteIdx = i; updateQuoteDisplay(); }
+function askAbout(name) { chatMessages.push({role:"user",text:`Tell me more about ${name} and should I buy it?`}); goTab("chat"); }
+function homeBudgetSearch() { const v = document.getElementById("home-budget")?.value; if(v){ budgetVal=v; runBudgetSearch(); goTab("budget"); } }
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+renderTabs();
+renderMain();
+</script>
+</body>
+</html>
